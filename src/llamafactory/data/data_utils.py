@@ -47,34 +47,43 @@ class DatasetModule(TypedDict):
 
 
 def merge_dataset(
-    all_datasets: List[Union["Dataset", "IterableDataset"]], data_args: "DataArguments", seed: int
+    all_datasets: List[Union["Dataset", "IterableDataset"]],
+    data_args: "DataArguments",
+    seed: int,
 ) -> Union["Dataset", "IterableDataset"]:
     r"""
     Merges multiple datasets to a unified dataset.
     """
     if len(all_datasets) == 1:
         return all_datasets[0]
-    elif data_args.mix_strategy == "concat":
+    if data_args.mix_strategy == "concat":
         if data_args.streaming:
-            logger.warning_once("The samples between different datasets will not be mixed in streaming mode.")
+            logger.warning_once(
+                "The samples between different datasets will not be mixed in streaming mode.",
+            )
 
         return concatenate_datasets(all_datasets)
-    elif data_args.mix_strategy.startswith("interleave"):
+    if data_args.mix_strategy.startswith("interleave"):
         if not data_args.streaming:
-            logger.warning_once("We recommend using `mix_strategy=concat` in non-streaming mode.")
+            logger.warning_once(
+                "We recommend using `mix_strategy=concat` in non-streaming mode.",
+            )
 
         return interleave_datasets(
             datasets=all_datasets,
             probabilities=data_args.interleave_probs,
             seed=seed,
-            stopping_strategy="first_exhausted" if data_args.mix_strategy.endswith("under") else "all_exhausted",
+            stopping_strategy="first_exhausted"
+            if data_args.mix_strategy.endswith("under")
+            else "all_exhausted",
         )
-    else:
-        raise ValueError(f"Unknown mixing strategy: {data_args.mix_strategy}.")
+    raise ValueError(f"Unknown mixing strategy: {data_args.mix_strategy}.")
 
 
 def split_dataset(
-    dataset: Union["Dataset", "IterableDataset"], data_args: "DataArguments", seed: int
+    dataset: Union["Dataset", "IterableDataset"],
+    data_args: "DataArguments",
+    seed: int,
 ) -> "DatasetDict":
     r"""
     Splits the dataset and returns a dataset dict containing train set and validation set.
@@ -86,20 +95,22 @@ def split_dataset(
         val_set = dataset.take(int(data_args.val_size))
         train_set = dataset.skip(int(data_args.val_size))
         return DatasetDict({"train": train_set, "validation": val_set})
-    else:
-        val_size = int(data_args.val_size) if data_args.val_size > 1 else data_args.val_size
-        dataset = dataset.train_test_split(test_size=val_size, seed=seed)
-        return DatasetDict({"train": dataset["train"], "validation": dataset["test"]})
+    val_size = int(data_args.val_size) if data_args.val_size > 1 else data_args.val_size
+    dataset = dataset.train_test_split(test_size=val_size, seed=seed)
+    return DatasetDict({"train": dataset["train"], "validation": dataset["test"]})
 
 
 # modified from https://github.com/jzhang38/EasyContext/
 def preprocess_sp_dataset(seq_ids, world_size, sequence_parallel_mode):
-    if sequence_parallel_mode == 'zigzag-ring':
+    if sequence_parallel_mode == "zigzag-ring":
+        if len(seq_ids) == 0 or (len(seq_ids) // (2 * world_size) == 0):
+            return []
         step = len(seq_ids) // (2 * world_size)
         value_chunks = [seq_ids[s : s + step] for s in range(0, len(seq_ids), step)]
         local_values = list()
         for rank in range(world_size):
-            local_values.append(value_chunks[rank] + value_chunks[2 * world_size - rank - 1])
+            local_values.append(
+                value_chunks[rank] + value_chunks[2 * world_size - rank - 1],
+            )
         return local_values
-    else:
-        raise NotImplementedError('Other sequence parallel modes are to be implemented.')
+    raise NotImplementedError("Other sequence parallel modes are to be implemented.")
