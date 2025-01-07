@@ -13,7 +13,7 @@ deepspeed: examples/deepspeed/ds_z3_config.json  # choices: [ds_z0_config.json, 
 dataset: llava_150k_en,glaive_toolcall_100k
 template: mllama
 cutoff_len: 128000
-max_samples: 100000
+max_samples: 10000
 overwrite_cache: true
 preprocessing_num_workers: 16
 
