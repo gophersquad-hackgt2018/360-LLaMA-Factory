@@ -46,4 +46,4 @@ run_name: llama3vision-11b-full-sft
 
 ### sequence parallelism
 sequence_parallel_size: 4
-neat_packing: true
+neat_packing: false

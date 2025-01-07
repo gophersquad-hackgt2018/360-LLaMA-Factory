@@ -1,7 +1,7 @@
 name: axolotl-vision-test-run
 image: mosaicml/pytorch:2.3.1_cu121-python3.11-ubuntu20.04
 compute:
-  gpus: 32
+  gpus: 24
   cluster: r15z1p1
   gpu_type: h100_80gb
 integrations:
@@ -21,4 +21,4 @@ command: |-
   pip3 install --no-deps ring-flash-attn
   wandb login
   huggingface-cli login --token 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
-  accelerate launch --num_processes 32 --num_machines 4 --machine_rank $NODE_RANK --main_process_ip $MASTER_ADDR --main_process_port $MASTER_PORT src/train.py examples/train_full/llama3vision_full_sft_ds3.yaml
+  accelerate launch --num_processes 24 --num_machines 3 --machine_rank $NODE_RANK --main_process_ip $MASTER_ADDR --main_process_port $MASTER_PORT src/train.py examples/train_full/llama3vision_full_sft_ds3.yaml
