@@ -21,4 +21,4 @@ command: |-
   pip3 install --no-deps ring-flash-attn
   wandb login
   huggingface-cli login --token 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
-  accelerate launch --num_processes 32 --num_machines 4 --machine_rank $NODE_RANK --main_process_ip $MASTER_ADDR --main_process_port $MASTER_PORT src/train.py examples/train_full/llama3vision_full_sft.yaml
+  accelerate launch --num_processes 32 --num_machines 4 --machine_rank $NODE_RANK --main_process_ip $MASTER_ADDR --main_process_port $MASTER_PORT src/train.py examples/train_full/llama3vision_full_sft_ds3.yaml
