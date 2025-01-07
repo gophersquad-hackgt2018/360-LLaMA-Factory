@@ -15,9 +15,10 @@ integrations:
 command: |-
   unset WORLD_SIZE
   pip3 install awscli
-  cd LLaMA-Factory
+  cd 360-LLaMA-Factory
   pip3 install ninja packaging
-  pip3 install -e ".[torch,metrics,deepspeed,liger-kernel,bitsandbytes,flash-attn,auto-gptq,]"
+  pip3 install -e ".[torch,metrics,deepspeed,liger-kernel,bitsandbytes,flash-attn,auto-gptq]"
+  pip3 install --no-deps ring-flash-attn
   wandb login
   huggingface-cli login --token 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
   accelerate launch --num_processes 32 --num_machines 4 --machine_rank $NODE_RANK --main_process_ip $MASTER_ADDR --main_process_port $MASTER_PORT src/train.py examples/train_full/llama3vision_full_sft.yaml
