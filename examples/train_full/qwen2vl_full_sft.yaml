@@ -1,6 +1,5 @@
 ### model
 model_name_or_path: /model-weights/72B
-trust_remote_code: true
 
 ### method
 stage: sft
