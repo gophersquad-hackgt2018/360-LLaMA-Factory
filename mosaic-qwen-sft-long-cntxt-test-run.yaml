@@ -18,7 +18,7 @@ command: |-
   pip3 install awscli
   mkdir -p /model-weights/72B
   aws s3 sync "s3://refuel-scratch-space/qwen2/" /model-weights/72B
-  cd LLaMA-Factory
+  cd 360-LLaMA-Factory
   pip3 install ninja packaging
   pip3 install -e ".[torch,metrics,deepspeed,liger-kernel,bitsandbytes,flash-attn,auto-gptq,adam-mini,badam]"
   wandb login
