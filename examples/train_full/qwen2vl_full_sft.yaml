@@ -35,7 +35,7 @@ lr_scheduler_type: cosine
 warmup_ratio: 0.1
 bf16: true
 ddp_timeout: 180000000
-neat_packing: true
+packing: true
 enable_liger_kernel: false
 flash_attn: fa2
 use_unsloth_gc: true
