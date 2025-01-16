@@ -11,7 +11,7 @@ deepspeed: examples/deepspeed/ds_z3_offload_config.json  # choices: [ds_z0_confi
 use_adam_mini: true
 
 ### dataset
-dataset: mllm_demo,identity,alpaca_en_demo,slimorca
+dataset: identity,alpaca_en_demo,slimorca
 template: qwen2_vl
 cutoff_len: 128000
 max_samples: 25000

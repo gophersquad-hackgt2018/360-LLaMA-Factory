@@ -2,8 +2,8 @@ name: axolotl-vision-test-run
 image: mosaicml/pytorch:2.3.1_cu121-python3.11-ubuntu20.04
 compute:
   gpus: 16
-  cluster: r15z1p1
-  gpu_type: h100_80gb
+  cluster: r7z24p1
+  gpu_type: a100_80gb
 integrations:
 - integration_type: git_repo
   git_repo: gophersquad-hackgt2018/360-LLaMA-Factory
@@ -24,4 +24,5 @@ command: |-
   pip3 install --no-deps ring-flash-attn
   wandb login
   huggingface-cli login --token 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
+  llamafactory-cli env
   PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True accelerate launch --num_processes 16 --num_machines 2 --machine_rank $NODE_RANK --main_process_ip $MASTER_ADDR --main_process_port $MASTER_PORT src/train.py examples/train_full/qwen2vl_full_sft.yaml
